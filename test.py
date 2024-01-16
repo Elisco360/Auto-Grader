@@ -1,9 +1,9 @@
-import unittest
-import os
 import importlib.util
+import os
+import unittest
 
 
-class CalculatorTest(unittest.TestCase):
+class IncomeTaxCalculatorTest(unittest.TestCase):
     def setUp(self):
         # Specify the submissions directory
         submissions_dir = "submissions"
@@ -14,7 +14,7 @@ class CalculatorTest(unittest.TestCase):
         self.student_scores = dict()
         for student in self.student_folders:
             if student not in self.student_scores:
-                self.student_scores[student] = 10
+                self.student_scores[student] = 0
 
         self.flag = ""
 
@@ -23,72 +23,55 @@ class CalculatorTest(unittest.TestCase):
         submissions_dir = "submissions"
 
         # Load the student's code dynamically
-        spec = importlib.util.spec_from_file_location("calc", os.path.join(submissions_dir, student_folder, "calc.py"))
+        spec = importlib.util.spec_from_file_location("income_tax",
+                                                      os.path.join(submissions_dir, student_folder, "income_tax.py"))
         student_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(student_module)
 
-        # Run tests for the Calculator class by criteria
-        calculator = student_module.Calculator()
-        self.flag = "s"
-        self.sanity_basic_tests(calculator, student_folder)
+        # Run tests for the income tax calculator class
         self.flag = "c"
-        self.comprehensive_tests(calculator, student_folder)
+        self.comprehensive_tests(student_module.compute_tax, student_folder)
         self.flag = "r"
-        self.robustness_tests(calculator, student_folder)
+        self.robustness_tests(student_module.compute_tax, student_folder)
 
-    def sanity_basic_tests(self, calculator, student_folder):
-        # Test addition
-        print("Sanity Start -------------------------------")
-        nums_x = [2, -2]
-        nums_y = [3, 3]
-        output = [5, 1]
-        for i in range(2):
+    def comprehensive_tests(self, compute_tax_function, student_folder):
+        # Comprehensive tests for the compute_tax function
+        print("***** Comprehensive Start *****")
+        # Test with various income values
+        test_cases = [
+            (2000, 1743.85),
+            (5000, 4117.0),
+            # Add more comprehensive test cases
+        ]
+
+        for i, (income, expected_output) in enumerate(test_cases, start=1):
             try:
-                self.assertEqual(calculator.add(nums_x[i], nums_y[i]), output[i])
-                print(f"{student_folder} passed test {i + 1}")
+                actual_output = compute_tax_function(income)
+                self.assertAlmostEqual(actual_output, expected_output, places=2)
+                self.student_scores[student_folder] += 1
+                print(f"{student_folder} passed test {i}")
             except:
-                self.student_scores[student_folder] -= 0.5
-                print(f"{student_folder} failed test {i + 1}")
-        print("Sanity Done -------------------------------\n")
+                print(f"{student_folder} failed test {i}")
+        print("***** Comprehensive Done *****\n")
 
-    def comprehensive_tests(self, calculator, student_folder):
-        # # Test subtraction
-        # self.assertEqual(calculator.subtract(5, 3), 2)
-        # self.assertEqual(calculator.subtract(0, 0), 0)
-        # # ... Add more comprehensive tests
-        #
-        # # Test multiplication
-        # self.assertEqual(calculator.multiply(2, 4), 8)
-        # self.assertEqual(calculator.multiply(3, 0), 0)
-        # # ... Add more comprehensive tests
-
-        # Test division
-        print("Comprehensive Start -------------------------------")
-        nums_x = [6, 5]
-        nums_y = [2, 0]
-        output = [3, "Cannot divide by zero."]
-        for i in range(2):
-            try:
-                self.assertEqual(calculator.divide(nums_x[i], nums_y[i]), output[i])
-                print(f"{student_folder} passed test {i + 1}")
-            except:
-                self.student_scores[student_folder] -= -0.5
-                print(f"{student_folder} failed test {i + 1}")
-        print("Comprehensive Done -------------------------------\n")
-
-    def robustness_tests(self, calculator, student_folder):
-        # Test edge cases
+    def robustness_tests(self, compute_tax_function, student_folder):
+        # Robustness tests for the compute_tax function
         print("Robustness Start -------------------------------")
-        nums_x = [0, 1]
-        nums_y = [0, 1]
-        output = [0, 1]
-        for i in range(len(output)):
+        # Test with edge cases and invalid inputs
+        test_cases = [
+            (0, 0.0),
+            (-5000, 0.0),  # Invalid input, should return 0.0
+            # Add more robustness test cases
+        ]
+
+        for i, (income, expected_output) in enumerate(test_cases, start=1):
             try:
-                self.assertEqual(calculator.divide(nums_x[i], nums_y[i]), output[i])
-                print(f"{student_folder} passed test {i + 1}")
+                actual_output = compute_tax_function(income)
+                self.assertAlmostEqual(actual_output, expected_output, places=2)
+                self.student_scores[student_folder] += 1
+                print(f"{student_folder} passed test {i}")
             except:
-                self.student_scores[student_folder] -= 1
-                print(f"{student_folder} failed test {i + 1}")
+                print(f"{student_folder} failed test {i}")
         print("Robustness Done -------------------------------\n")
 
     def test_all_students(self):
