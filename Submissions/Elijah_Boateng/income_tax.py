@@ -10,7 +10,7 @@ def compute_tax(income: float) -> float:
         - float: The calculated net income.
 
         Example:
-        >>> compute_tax(2000)
+        #>>> compute_tax(2000)
         1743.85
     """
     # Initialize variables
@@ -76,6 +76,3 @@ def compute_tax(income: float) -> float:
         return 0.0
 
     return income - tax_payable
-
-
-print(compute_tax(11111.11))

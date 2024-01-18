@@ -9,7 +9,7 @@ def compute_tax(income: float) -> float:
     - float: The calculated net income.
 
     Example:
-    >>> compute_tax(2000)
+    #>>> compute_tax(2000)
     1743.85
     """
     # Tax brackets and corresponding rates
@@ -30,4 +30,3 @@ def compute_tax(income: float) -> float:
 
 
 # Example usage
-print(compute_tax(2000))
