@@ -78,4 +78,4 @@ def compute_tax(income: float) -> float:
     return income - tax_payable
 
 
-print(compute_tax(100000))
+print(compute_tax(11111.11))
