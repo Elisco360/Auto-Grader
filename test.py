@@ -63,7 +63,7 @@ class IncomeTaxCalculatorTest(unittest.TestCase):
         test_cases = [
             (511.5, 506.02),
             (643, 624.33),
-            (4004, 3400),
+            (4044, 3400),
             (23679, 17944.15),
             (73678, 51759.55),
             (12345678.9, 12314547.75),
@@ -90,14 +90,15 @@ class IncomeTaxCalculatorTest(unittest.TestCase):
         test_cases = [
             (402, 402),
             (0.01, 0.01),
-            (1e12, 999999968868.85)
+            (5e12+402, 4999999969270.85),
+            (50000, 36368.85)
         ]
 
         for i, (income, expected_output) in enumerate(test_cases, start=1):
             try:
                 actual_output = compute_tax_function(income)
                 self.assertAlmostEqual(actual_output, expected_output, places=2)
-                self.student_scores[student_folder] += 1
+                self.student_scores[student_folder] += 0.75
                 print(f"{student_folder} passed test {i}")
             except:
                 print(f"{student_folder} failed test {i}")
