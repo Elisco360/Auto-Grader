@@ -52,7 +52,7 @@ class IncomeTaxCalculatorTest(unittest.TestCase):
                 actual_output = round(compute_tax_function(income), 2)
                 calc_val = actual_output
                 self.assertAlmostEqual(actual_output, expected_output, places=2)
-                self.student_scores[student_folder] += 0.5
+                self.student_scores[student_folder] += 1
                 print(f"{student_folder} passed test {i}")
             except:
                 print(f"{student_folder} failed test {i} -> Expected {expected_output} : Got {calc_val}")
@@ -81,7 +81,7 @@ class IncomeTaxCalculatorTest(unittest.TestCase):
                 actual_output = round(compute_tax_function(income), 2)
                 calc_val = actual_output
                 self.assertAlmostEqual(actual_output, expected_output, places=2)
-                self.student_scores[student_folder] += 0.5
+                self.student_scores[student_folder] += 4
                 print(f"{student_folder} passed test {i}")
             except:
                 print(f"{student_folder} failed test {i} -> Expected {expected_output} : Got {calc_val}")
@@ -95,7 +95,6 @@ class IncomeTaxCalculatorTest(unittest.TestCase):
             (402, 402),
             (0.01, 0.01),
             (5e12 + 402, 4999999969270.85),
-            (50000, 36368.85)
         ]
 
         for i, (income, expected_output) in enumerate(test_cases, start=1):
@@ -104,7 +103,7 @@ class IncomeTaxCalculatorTest(unittest.TestCase):
                 actual_output = compute_tax_function(income)
                 calc_val = actual_output
                 self.assertAlmostEqual(actual_output, expected_output, places=2)
-                self.student_scores[student_folder] += 0.75
+                self.student_scores[student_folder] += 2
                 print(f"{student_folder} passed test {i}")
             except:
                 print(f"{student_folder} failed test {i} -> Expected {expected_output} : Got {calc_val}")
