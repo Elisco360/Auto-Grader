@@ -1,38 +1,40 @@
-import zipfile
 import os
 import shutil
+from zipfile import ZipFile
 
-# Specify the main zip file
-main_zip_file = 'subs.zip'
-main_folder = 'submissions'
 
-# Create a temporary folder for extracting the main zip file
-temp_main_folder = os.path.join(main_folder, 'temp_main_folder')
+def extract_and_organize(zip_file_path, output_folder):
+    with ZipFile(zip_file_path, 'r') as zip_ref:
+        zip_ref.extractall(output_folder)
 
-# Extract the main zip file
-with zipfile.ZipFile(main_zip_file, 'r') as main_zip_ref:
-    main_zip_ref.extractall(temp_main_folder)
 
-# Iterate through all files in the temporary main folder
-for user_folder in os.listdir(temp_main_folder):
-    user_folder_path = os.path.join(temp_main_folder, user_folder)
-
-    # Check if the file is a directory
-    if os.path.isdir(user_folder_path):
-        # Get the user's name from the folder structure
-        user_name = user_folder.split('_')[0]
-
-        # Specify the destination folder based on the user's name
-        destination_folder = os.path.join(main_folder, user_name)
-
-        # Move the contents of the user's folder to the destination folder
-        for root, dirs, files in os.walk(user_folder_path):
-            for file in files:
+def organize_submission(submission_folder):
+    for root, dirs, files in os.walk(submission_folder):
+        for file in files:
+            if file.endswith('.py') or file.endswith('.java'):
                 source_path = os.path.join(root, file)
+                destination_folder = os.path.join(submission_folder, os.path.basename(root))
                 destination_path = os.path.join(destination_folder, file)
-                shutil.move(source_path, destination_path)
 
-# Remove the temporary main folder
-shutil.rmtree(temp_main_folder)
+                if not os.path.exists(destination_folder):
+                    os.makedirs(destination_folder)
 
-print(f'Successfully extracted and organized files from {main_zip_file}')
+                shutil.copy(source_path, destination_path)
+
+
+def main():
+    submissions_zip = 'subs.zip'
+    output_folder = 'subs'
+
+    # Extract the submissions.zip
+    extract_and_organize(submissions_zip, output_folder)
+
+    # Organize the extracted contents
+    for submission_folder in os.listdir(output_folder):
+        submission_path = os.path.join(output_folder, submission_folder)
+        if os.path.isdir(submission_path):
+            organize_submission(submission_path)
+
+
+if __name__ == "__main__":
+    main()
