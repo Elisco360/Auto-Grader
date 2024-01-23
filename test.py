@@ -23,18 +23,18 @@ class IncomeTaxCalculatorTest(unittest.TestCase):
         submissions_dir = "submissions"
 
         # Load the student's code dynamically
-        spec = importlib.util.spec_from_file_location("income_tax",
-                                                      os.path.join(submissions_dir, student_folder, "income_tax.py"))
+        spec = importlib.util.spec_from_file_location("income_tax_calculator",
+                                                      os.path.join(submissions_dir, student_folder, "income_tax_calculator.py"))
         student_module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(student_module)
 
         # Run tests for the income tax calculator class
         self.flag = "s"
-        self.sanity_tests(student_module.compute_tax, student_folder)
+        self.sanity_tests(student_module.income_tax, student_folder)
         self.flag = "c"
-        self.comprehensive_tests(student_module.compute_tax, student_folder)
+        self.comprehensive_tests(student_module.income_tax, student_folder)
         self.flag = "r"
-        self.robustness_tests(student_module.compute_tax, student_folder)
+        self.robustness_tests(student_module.income_tax, student_folder)
 
     def sanity_tests(self, compute_tax_function, student_folder):
         # Sanity tests for the compute_tax function
